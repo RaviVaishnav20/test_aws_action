@@ -1,0 +1,27 @@
+name: AWS OIDC Example
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/OIDCRole
+          aws-region: us-west-2
+
+      - name: Deploy to AWS
+        run: |
+          aws s3 cp my-app s3://my-bucket/ --recursive
+
